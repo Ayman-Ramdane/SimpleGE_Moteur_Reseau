@@ -4,6 +4,7 @@
 
 #include "chickendodge/messages/networklogin.h"
 #include "chickendodge/messages/networkstart.h"
+#include "chickendodge/messages/networkscore.h"
 
 namespace ChickenDodge
 {
@@ -13,5 +14,6 @@ namespace ChickenDodge
 
     Message::Register<NetworkLogin>();
     Message::Register<NetworkStart>();
+    Message::Register<NetworkScore>();
   }
 } // namespace ChickenDodge
