@@ -60,6 +60,7 @@ namespace ChickenDodge
 
     std::unordered_map<SimpleGE::Network::Connection::ConnectionIDType, SocketData> clients;
     std::unordered_set<SimpleGE::Network::Connection::ConnectionIDType> pendingPlayers;
+    
     std::unordered_map<std::string, int> scores;
     std::vector<std::pair<std::string, int>> leaderBoard;
   };

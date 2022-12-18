@@ -19,14 +19,18 @@ namespace ChickenDodge
       return;
     }
 
+    //Réceptionner le tableau des meneurs
     const auto& scoreMsg = msg.Get<NetworkLeaderboardMessage>();
 
     std::vector<std::pair<std::string, int>> leaderboard = scoreMsg.leaderBoard;
 
+    // Fixer les valeurs dans le tableau des meneurs du NetworkLeaderboardComponent à partir des données reçues
     for (auto& pair : leaderboard)
     {
       SetScore(pair.first, pair.second);
     }
+
+    // Afficher le tableau des meneurs
     Display();
   }
 

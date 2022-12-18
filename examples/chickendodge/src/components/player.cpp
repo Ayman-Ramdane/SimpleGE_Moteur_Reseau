@@ -8,7 +8,6 @@
 #include "chickendodge/components/rupee.h"
 #include "chickendodge/components/score.h"
 #include <chickendodge/messages/networkscore.h>
-#include <string_view>
 
 using json = nlohmann::json;
 
@@ -136,7 +135,8 @@ namespace ChickenDodge
       score->Increment(rupee->GetValue());
       obj.GetParent()->RemoveChild(obj);
 
-      // SendMessage();
+      // Appeler la fonction SendMessage
+      SendMessage();
     }
     if (heart != nullptr)
     {
@@ -158,10 +158,14 @@ namespace ChickenDodge
 
   void PlayerComponent::SendMessage() const
   {
+    // Récupérer les données à envoyer
     std::string playerName = this->GetName().data();
     int playerScore = this->GetScore()->GetValue();
 
+    // Créer le message
     NetworkScore msg(playerScore, playerName);
+
+    // Envoyer le message
     NetworkSystem::Send(msg);
   }
 
