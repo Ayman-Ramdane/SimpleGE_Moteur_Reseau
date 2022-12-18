@@ -34,7 +34,5 @@ namespace ChickenDodge
 
     NetworkScore msg(playerScore, playerName);
     NetworkSystem::Send(msg);
-
-    // this->RegisterScoreChangedEvent([this](int value) { OnScoreChanged(value); });
   }
 } // namespace ChickenDodge

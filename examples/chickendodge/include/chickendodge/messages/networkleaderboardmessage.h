@@ -8,15 +8,12 @@ namespace ChickenDodge
 {
   struct NetworkLeaderboardMessage : public SimpleGE::Message<NetworkLeaderboardMessage>
   {
-    static constexpr MessageType Type = FirstGameType + 2;
+    static constexpr MessageType Type = FirstGameType + 4;
 
     std::vector<std::pair<std::string, int>> leaderBoard;
 
     NetworkLeaderboardMessage() = default;
-    NetworkLeaderboardMessage(std::vector<std::pair<std::string, int>> leaderBoard)
-        : leaderBoard(std::move(leaderBoard))
-    {
-    }
+    NetworkLeaderboardMessage(std::vector<std::pair<std::string, int>> leaderBoard): leaderBoard(std::move(leaderBoard)){}
 
     void Serialize(SimpleGE::ISerializer& serializer) const override
     {

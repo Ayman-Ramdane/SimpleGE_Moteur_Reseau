@@ -32,7 +32,6 @@ namespace ChickenDodge
     {
       scoreChangedEvent.Register(onScoreChanged);
     }
-    // void OnScoreChanged(int value);
 
   private:
     int value{};

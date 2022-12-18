@@ -9,7 +9,6 @@
 #include <iostream>
 #include <iterator>
 #include <string>
-#include <string_view>
 #include <utility>
 
 using namespace SimpleGE;
@@ -36,9 +35,9 @@ namespace ChickenDodge
     {
       const auto& scoreMsg = msg.Get<NetworkScore>();
 
-      auto& socketData = clients.find(connection.GetID())->second;
+      auto currentId = connection.GetID();
 
-      auto name = clients.find(connection.GetID())->second.name;
+      std::string name = clients.find(currentId)->second.name;
       int score = scoreMsg.playerScore;
 
       std::pair<std::string, int> data = {name, score};
@@ -73,7 +72,6 @@ namespace ChickenDodge
         }
       }
 
-      std::vector<std::pair<std::string, int>> leaderBoard;
 
       leaderBoard.reserve(scores.size());
       for (auto& pair : scores)
@@ -81,13 +79,13 @@ namespace ChickenDodge
         leaderBoard.emplace_back(pair);
       }
 
-      // NetworkLeaderboardMessage msg(leaderBoard);
-      // NetworkSystem::Send(socketData.player.get(), msg);
+      NetworkLeaderboardMessage msg(leaderBoard);
 
-      // for (auto const& pair : scores)
-      // {
-      //   std::cout << "{" << pair.first << ": " << pair.second << "}\n";
-      // }
+      for (auto& client : clients)
+      {
+        auto& socket = client.second;
+        NetworkSystem::Send(socket.player.get(), msg);
+      }
     }
   }
 
@@ -96,14 +94,6 @@ namespace ChickenDodge
     auto id = connection.GetID();
     auto& socketData = clients.find(id)->second;
     socketData.name = msg.name;
-
-    // if (players.size() < clients.size())
-    // {
-    //   std::string_view name = socketData.name;
-    //   std::pair<int, std::string_view> pair = {id, name};
-
-    //   players.insert(pair);
-    // }
 
     // Si aucun joueur n'est en attente, on place le nouveau
     // joueur en attente.
@@ -153,6 +143,5 @@ namespace ChickenDodge
 
     pendingPlayers.erase(id);
     clients.erase(id);
-    // players.erase(id);
   }
 } // namespace ChickenDodge
