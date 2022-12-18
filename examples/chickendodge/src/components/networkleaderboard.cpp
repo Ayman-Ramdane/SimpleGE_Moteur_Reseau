@@ -27,13 +27,13 @@ namespace ChickenDodge
     {
       SetScore(pair.first, pair.second);
     }
+    Display();
   }
 
   void NetworkLeaderboardComponent::SetScore(const std::string& name, int score)
   {
     std::lock_guard<std::mutex> lock(mutex);
     scores[name] = score;
-    Display();
   }
 
   void NetworkLeaderboardComponent::Display()

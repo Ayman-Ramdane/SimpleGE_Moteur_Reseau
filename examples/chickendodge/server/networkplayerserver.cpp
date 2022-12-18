@@ -72,7 +72,6 @@ namespace ChickenDodge
         }
       }
 
-
       leaderBoard.reserve(scores.size());
       for (auto& pair : scores)
       {
@@ -119,6 +118,13 @@ namespace ChickenDodge
 
     NetworkSystem::Send(otherSocketData.player.get(), p1);
     NetworkSystem::Send(socketData.player.get(), p2);
+
+    if (!leaderBoard.empty())
+    {
+      NetworkLeaderboardMessage msg(leaderBoard);
+      NetworkSystem::Send(otherSocketData.player.get(), msg);
+      NetworkSystem::Send(socketData.player.get(), msg);
+    }
   }
 
   void NetworkPlayerServerComponent::OnConnectImpl(const Network::ConnectionRef& connection)
