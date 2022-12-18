@@ -1,6 +1,7 @@
 #include "chickendodge/pch/precomp.h"
 
 #include "chickendodge/components/score.h"
+#include <chickendodge/messages/networkscore.h>
 
 using json = nlohmann::json;
 
@@ -27,5 +28,13 @@ namespace ChickenDodge
     scoreChangedEvent.Trigger(value);
 
     scoreSprite->SetText(fmt::format("{}", value));
+
+    std::string playerName = "playerName";
+    int playerScore = value;
+
+    NetworkScore msg(playerScore, playerName);
+    NetworkSystem::Send(msg);
+
+    // this->RegisterScoreChangedEvent([this](int value) { OnScoreChanged(value); });
   }
 } // namespace ChickenDodge

@@ -37,6 +37,7 @@ namespace ChickenDodge
 
     void UpdateLogic(const SimpleGE::Timing& timing) override;
     void OnCollision(const SimpleGE::ColliderComponent& other) override;
+    void SendMessage() const;
 
     void SetLocal(bool isLocal) { this->isLocal = isLocal; }
     void SetName(std::string_view name) { this->name = name; }

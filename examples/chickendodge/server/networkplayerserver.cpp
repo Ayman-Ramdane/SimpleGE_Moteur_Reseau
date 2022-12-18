@@ -3,7 +3,14 @@
 #include "networkplayerserver.h"
 
 #include "chickendodge/messages/networklogin.h"
+#include "chickendodge/messages/networkscore.h"
 #include "chickendodge/messages/networkstart.h"
+#include <chickendodge/messages/networkleaderboardmessage.h>
+#include <iostream>
+#include <iterator>
+#include <string>
+#include <string_view>
+#include <utility>
 
 using namespace SimpleGE;
 
@@ -19,10 +26,68 @@ namespace ChickenDodge
     if (msg.Is<NetworkInputChanged>())
     {
       auto otherPlayer = clients.find(connection.GetID())->second.otherPlayer.lock();
+
       if (otherPlayer != nullptr)
       {
         NetworkSystem::Send(otherPlayer.get(), msg);
       }
+    }
+    if (msg.Is<NetworkScore>())
+    {
+      const auto& scoreMsg = msg.Get<NetworkScore>();
+
+      auto& socketData = clients.find(connection.GetID())->second;
+
+      auto name = clients.find(connection.GetID())->second.name;
+      int score = scoreMsg.playerScore;
+
+      std::pair<std::string, int> data = {name, score};
+
+      if (scores.empty())
+      {
+        scores.insert(data);
+      }
+      else
+      {
+        int highScore = 0;
+        for (auto& pair : scores)
+        {
+          int currentScore = pair.second;
+          if (currentScore > highScore)
+          {
+            highScore = currentScore;
+          }
+        }
+
+        if (score > highScore)
+        {
+          auto iter = scores.find(name);
+          if (iter != scores.end())
+          {
+            iter->second = score;
+          }
+          else
+          {
+            scores.insert(data);
+          }
+        }
+      }
+
+      std::vector<std::pair<std::string, int>> leaderBoard;
+
+      leaderBoard.reserve(scores.size());
+      for (auto& pair : scores)
+      {
+        leaderBoard.emplace_back(pair);
+      }
+
+      // NetworkLeaderboardMessage msg(leaderBoard);
+      // NetworkSystem::Send(socketData.player.get(), msg);
+
+      // for (auto const& pair : scores)
+      // {
+      //   std::cout << "{" << pair.first << ": " << pair.second << "}\n";
+      // }
     }
   }
 
@@ -31,6 +96,14 @@ namespace ChickenDodge
     auto id = connection.GetID();
     auto& socketData = clients.find(id)->second;
     socketData.name = msg.name;
+
+    // if (players.size() < clients.size())
+    // {
+    //   std::string_view name = socketData.name;
+    //   std::pair<int, std::string_view> pair = {id, name};
+
+    //   players.insert(pair);
+    // }
 
     // Si aucun joueur n'est en attente, on place le nouveau
     // joueur en attente.
@@ -80,5 +153,6 @@ namespace ChickenDodge
 
     pendingPlayers.erase(id);
     clients.erase(id);
+    // players.erase(id);
   }
 } // namespace ChickenDodge
