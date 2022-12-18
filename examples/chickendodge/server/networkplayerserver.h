@@ -1,6 +1,8 @@
 #pragma once
 
 #include "chickendodge/pch/precomp.h"
+#include <string>
+#include <string_view>
 
 namespace ChickenDodge
 {
@@ -58,5 +60,8 @@ namespace ChickenDodge
 
     std::unordered_map<SimpleGE::Network::Connection::ConnectionIDType, SocketData> clients;
     std::unordered_set<SimpleGE::Network::Connection::ConnectionIDType> pendingPlayers;
+    
+    std::unordered_map<std::string, int> scores;
+    std::vector<std::pair<std::string, int>> leaderBoard;
   };
 } // namespace ChickenDodge

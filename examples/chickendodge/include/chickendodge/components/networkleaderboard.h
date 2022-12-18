@@ -2,10 +2,9 @@
 
 #include "chickendodge/pch/precomp.h"
 
+#include <chickendodge/components/score.h>
 #include <mutex>
 #include <thread>
-
-#define USE_DEBUG_LEADERBOARD
 
 namespace ChickenDodge
 {
@@ -26,29 +25,5 @@ namespace ChickenDodge
 
     std::unordered_map<std::string, int> scores;
     std::mutex mutex;
-
-#ifdef USE_DEBUG_LEADERBOARD
-    // Cette structure met à jour un score fictif afin de valider le
-    // fonctionnement du système. À effacer lorsque l'implémentation
-    // est complète.
-    struct DebugLeaderboardTest
-    {
-      DebugLeaderboardTest(NetworkLeaderboardComponent& owner, std::string_view name, int score,
-                           std::chrono::milliseconds freq);
-      ~DebugLeaderboardTest();
-      void Run();
-
-      NetworkLeaderboardComponent& owner;
-      std::string name;
-      int score;
-      std::chrono::milliseconds freq;
-
-      std::thread thread;
-      bool done{};
-    };
-
-    DebugLeaderboardTest debug1 = {*this, "Test 1", 1234, std::chrono::seconds(5)};
-    DebugLeaderboardTest debug2 = {*this, "Test 2", 750, std::chrono::seconds(3)};
-#endif // USE_DEBUG_LEADERBOARD
   };
 } // namespace ChickenDodge
